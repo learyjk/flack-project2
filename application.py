@@ -43,6 +43,8 @@ def login():
 
 @app.route("/logout")
 def logout():
+    if current_user.is_anonymous:
+        return redirect("/login")
     data = {'message': current_user.get_id() + " has disconnected."}
     socketio.emit('message_update', data, broadcast=True)
     logout_user()

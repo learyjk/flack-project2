@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<br>
 
-<form action="/login" method="post">
+<form action="/login" method="post" class="form-inline">
+
     <div class="form-group">
         <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
     </div>
+
     <button class="btn btn-primary" type="submit">Login</button>
+
 </form>
+
 
 {% endblock %}
