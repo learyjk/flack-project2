@@ -11,7 +11,7 @@
 
             //A user connects
             socket.emit('user_connects', {
-                message: "User has connected"
+                message: "A user has connected"
             })
 
             //A message is sent
@@ -24,14 +24,7 @@
             }
         });
 
-        //Show that a user connected
-        socket.on('connection_response', data => {
-            const li = document.createElement('li');
-            li.innerHTML = data['message'];
-            document.querySelector('#messages').append(li);
-        });
-
-        //Sent message gets displayed
+        //Displays a message
         socket.on('message_update', data => {
             const li = document.createElement('li');
             li.innerHTML = data['message'];
