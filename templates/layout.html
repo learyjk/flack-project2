@@ -17,18 +17,22 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">Flack</a>
+        <a class="navbar-brand" href="/login">Login</a>
+        <a class="navbar-brand" href="/logout">Logout</a>
+    </nav>
 
 
     <div class="row with-margin">
         <div class="col-xs-12">
             <div class="input-group input-group-xs">
                 <nav class="navbar fixed-bottom navbar-light bg-light">
-                    <a class="navbar-brand" href="#">Flack</a>
                     <div class="col">
                         <input id="message_text" class="form-control" autocomplete="off" autofocus placeholder="Enter message here" type="text">
                     </div>
                     <span class="input-group-btn">
-                        <button id="send_button" type="button" class="btn btn-success">Send</button>
+                        <input id="send_button" type="submit" class="btn btn-success"></input>
                     </span>
                 </nav>
             </div>

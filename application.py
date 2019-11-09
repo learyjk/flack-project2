@@ -1,6 +1,6 @@
 import os
 
-from flask_login import LoginManager, login_user, current_user, UserMixin
+from flask_login import LoginManager, login_user, logout_user, current_user, UserMixin
 from flask import Flask, render_template, request, abort, redirect
 from flask_socketio import SocketIO, emit
 
@@ -24,6 +24,11 @@ class User(UserMixin):
         self.id = username
 
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -36,15 +41,19 @@ def login():
         return render_template("login.html")
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+@app.route("/logout")
+def logout():
+    data = {'message': current_user.get_id() + " has disconnected."}
+    socketio.emit('message_update', data, broadcast=True)
+    logout_user()
+    print("logout triggered")
+    return redirect("/login")
 
 
 @socketio.on('user_connects')
 def handle_user_connects(data):
     if current_user.is_anonymous:
-        return False
+        return redirect("/login")
     print(data['message'])
     data['message'] = current_user.get_id() + " has connected."
     emit('message_update', data, broadcast=True)
