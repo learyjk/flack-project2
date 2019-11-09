@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    document.addEventListener('DOMContentLoaded', () => {
+        var socket = io.connect( 'http://' + document.domain + ':' + location.port );
+
+        //When connected, send a message!
+        socket.on('connect', () => {
+
+            //A user connects
+            socket.emit('user_connects', { message: "User has connected" })
+
+            //A message is sent
+            document.querySelector('#send_button').onclick = () => {
+                message_text = document.querySelector('#message_text').value
+                document.querySelector('#message_text').value = ""
+                socket.emit('message_send', { message: message_text })
+            }
+        });
+
+        //Show that a user connected
+        socket.on('connection_response', data => {
+            const li = document.createElement('li');
+            li.innerHTML = data['message'];
+            document.querySelector('#messages').append(li);
+        });
+
+        //Sent message gets displayed
+        socket.on('message_update', data => {
+            const li = document.createElement('li');
+            li.innerHTML = data['message'];
+            document.querySelector('#messages').append(li);
+        });
+    });
+
+    // var socket = io.connect( 'http://' + document.domain + ':' + location.port )
+    // socket.on('connect', function() {
+    //     socket.emit('my event', {
+    //         data: 'User Connected'
+    //     })
+    // })
+</script>
+
+<h1>Messages</h1>
+
+<ul id="messages">
+</ul>
+
+
+{% endblock %}
