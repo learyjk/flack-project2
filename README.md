@@ -7,11 +7,8 @@ https://docs.cs50.net/ocw/web/projects/2/project2.html
 
 Still not complete:
 
-1. X Remember channel after close and reopen.
-        Remembers channel now but still no "User has left" message
-2. X Display last 100 messages. (Remember messages)
-        Remembers last 100 messages.  When user joins a new channel, only last 100 messages are loaded.
-3. Personal Touch
+1. Personal Touch
+2. Scrolling the messages
 
 
 Helpful Tutorials:
@@ -22,6 +19,4 @@ nobaa36: https://github.com/nobaa36/CS50-s-Web---project-2-Flack
 
 Issues to fix:
 
-1. Logout doesn't append a message to MESSAGE that user left or logged out.  Need a way to reference the room???
-2. After creating a new channel.  Cannot chat in that channel.
-3. After message list goes past bottom of page scrolling becomes awkward/impossible.
+1. After message list goes past bottom of page scrolling becomes awkward/impossible.
