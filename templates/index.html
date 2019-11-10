@@ -162,33 +162,28 @@
     });
 </script>
 
-<div class="container-fluid d-flex flex-column flex-grow-1 overflow-auto">
-    <div class="row flex-grow-1 overflow-hidden">
-        <div class="col-2 mh-100 overflow-auto py-2">
-            <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Room Name" type="text">
-            <button id="channel_button" class="btn btn-primary" type="submit">Create</button>
-            <h5><strong>Rooms</strong></h5>
-            <ul class="nav flex-column" id="channels" style="list-style-type:none">
-                {% for room in rooms %}
-                <li id="select-room" class="nav-item">{{ room }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div id="message_box" class="col mh-100 overflow-auto py-2">
-                <!-- <h5><strong id="room_name"></strong></h5> -->
-                <ul id="messages" style="list-style-type:none">
-                    {% for message in messages %}
-                    <li id="select-message">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-        </div>
+<div class="row flex-grow-1 overflow-hidden">
+    <div class="col-2 mh-100 overflow-auto py-2">
+        <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Room Name" type="text">
+        <button id="channel_button" class="btn btn-primary" type="submit">Create</button>
+        <h5><strong>Rooms</strong></h5>
+        <ul class="nav flex-column" id="channels" style="list-style-type:none">
+            {% for room in rooms %}
+            <li id="select-room" class="nav-item">{{ room }}</li>
+            {% endfor %}
+        </ul>
     </div>
-    <div class="row flex-shrink-0 bg-light">
-        <div class="col-12 py-2">
-            <p></p>
-        </div>
+
+    <div id="message_box" class="col mh-100 overflow-auto py-2">
+        <!-- <h5><strong id="room_name"></strong></h5> -->
+        <ul id="messages" style="list-style-type:none">
+            {% for message in messages %}
+            <li id="select-message">{{ message }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
+
 
 
 {% endblock %}

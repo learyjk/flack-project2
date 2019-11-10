@@ -17,39 +17,30 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 
-<body style="padding-top:65px;padding-bottom:150px;">
-    <div class="container vh-100">
-        <div class="row with-margin">
-            <nav class="navbar fixed-top navbar-light bg-light">
-                <div class="float-left">
-                    <a class="navbar-brand" href="/">Flack:</a>
-                    <strong id="room_name"></strong>
-                </div>
-                <div class="float-right">
-                    <a class="navbar-brand" href="/login">Login</a>
-                    <a class="navbar-brand" href="/logout">Logout</a>
-                </div>
-            </nav>
-        </div>
+<body style="height:100vh; display:flex; padding-top:65px; padding-bottom:65px;">
+    <div class="container-fluid d-flex flex-column flex-grow-1 vh-90 overflow-hidden">
+        <nav class="navbar fixed-top navbar-light bg-light">
+            <div class="float-left">
+                <a class="navbar-brand" href="/">Flack:</a>
+                <strong id="room_name"></strong>
+            </div>
+            <div class="float-right">
+                <a class="navbar-brand" href="/login">Login</a>
+                <a class="navbar-brand" href="/logout">Logout</a>
+            </div>
+        </nav>
 
+        <nav class="navbar fixed-bottom navbar-light bg-light">
+            <div class="col">
+                <input id="message_text" class="form-control" autocomplete="off" autofocus placeholder="Enter message here" type="text">
+            </div>
+            <span class="input-group-btn">
+                <button id="send_button" type="submit" class="btn btn-success">Send</button>
+            </span>
+        </nav>
 
-        <div class="row with-margin">
-            <nav class="navbar fixed-bottom navbar-light bg-light">
-                <div class="col">
-                    <input id="message_text" class="form-control" autocomplete="off" autofocus placeholder="Enter message here" type="text">
-                </div>
-                <span class="input-group-btn">
-                    <button id="send_button" type="submit" class="btn btn-success">Send</button>
-                </span>
-            </nav>
-        </div>
-
-
-        <div class="row with-margin">
-            {% block content %}{% endblock %}
-        </div>
+        {% block content %}{% endblock %}
     </div>
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
