@@ -14,8 +14,7 @@
         let room;
         if (previousRoom) {
             room = previousRoom;
-        }
-        else {
+        } else {
             room = "lounge";
         }
 
@@ -112,6 +111,8 @@
                 li.innerHTML = data['message'];
                 document.querySelector('#messages').append(li);
             }
+
+            //updateScroll();
         });
 
         //Adds a channel to the channel list
@@ -146,15 +147,23 @@
                 'room': room
             });
         }
+
         function decodeHtml(html) {
             var txt = document.createElement("textarea");
             txt.innerHTML = html;
             return txt.value;
         }
+
+        function updateScroll() {
+            const chatwindow = document.querySelector('#message_box');
+
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            alert("message sent!")
+        }
     });
 </script>
 
-<div class="container-fluid d-flex flex-column flex-grow-1 vh-100 overflow-auto">
+<div class="container-fluid d-flex flex-column flex-grow-1 overflow-auto">
     <div class="row flex-grow-1 overflow-hidden">
         <div class="col-2 mh-100 overflow-auto py-2">
             <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Room Name" type="text">
@@ -167,12 +176,12 @@
             </ul>
         </div>
         <div id="message_box" class="col mh-100 overflow-auto py-2">
-            <!-- <h5><strong id="room_name"></strong></h5> -->
-            <ul id="messages" style="list-style-type:none">
-                {% for message in messages %}
+                <!-- <h5><strong id="room_name"></strong></h5> -->
+                <ul id="messages" style="list-style-type:none">
+                    {% for message in messages %}
                     <li id="select-message">{{ message }}</li>
-                {% endfor %}
-            </ul>
+                    {% endfor %}
+                </ul>
         </div>
     </div>
     <div class="row flex-shrink-0 bg-light">
