@@ -33,6 +33,8 @@ class User(UserMixin):
 
 @app.route("/")
 def index():
+    if current_user.is_anonymous:
+        return redirect("/login")
     return render_template("index.html", username=current_user.get_id(), rooms=ROOMS, messages=MESSAGES[room])
 
 
@@ -75,8 +77,8 @@ def handle_message_send(data):
 
     time_stamp = strftime('%b-%d %I:%M%p', localtime())
     message = time_stamp + " " + data['username'] + ": " + data['message']
-    MESSAGES[room].append(message)
 
+    MESSAGES[room].append(message)
     # don't store more than 100 previous messages
     if len(MESSAGES[room]) > LIMIT:
         MESSAGES[room].pop(0)
@@ -92,7 +94,11 @@ def join(data):
 
     time_stamp = strftime('%b-%d %I:%M%p', localtime())
     message = time_stamp + " " + data['username'] + " has joined " + room
+
     MESSAGES[room].append(message)
+    # don't store more than 100 previous messages
+    if len(MESSAGES[room]) > LIMIT:
+        MESSAGES[room].pop(0)
 
     data = {'previous_messages': MESSAGES[room]}
 
@@ -106,7 +112,11 @@ def leave(data):
 
     time_stamp = strftime('%b-%d %I:%M%p', localtime())
     message = time_stamp + " " + data['username'] + " has left " + room
+
     MESSAGES[room].append(message)
+    # don't store more than 100 previous messages
+    if len(MESSAGES[room]) > LIMIT:
+        MESSAGES[room].pop(0)
 
     data = {'message': message}
     emit('message_update', data, room=room, broadcast=True)
