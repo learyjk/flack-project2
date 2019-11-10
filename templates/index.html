@@ -9,7 +9,7 @@
         const username = `{{username}}`;
         var messages = `{{messages}}`;
 
-        //Enter key causes send button click
+        //Enter key causes send button click instead of having to click it with mouse
         let msg = document.querySelector('#message_text');
         msg.addEventListener('keyup', event => {
             event.preventDefault();
@@ -27,12 +27,11 @@
                 'username': username,
             })
 
-            //Initial join to lounge
+            //Initially joins user to lounge
             if (!room) {
                 room = "lounge"
                 joinRoom(room)
             }
-
 
             //A message is sent
             document.querySelector('#send_button').onclick = () => {
@@ -45,6 +44,7 @@
                 })
             }
 
+            //Create Channel button is pressed
             document.querySelector('#channel_button').onclick = () => {
                 channel = document.querySelector('#channel_name').value
                 document.querySelector('#channel_name').value = ""
@@ -53,6 +53,7 @@
                 })
             }
 
+            //A room is selected from the channel list
             document.querySelectorAll('#select-room').forEach(p => {
                 p.onclick = () => {
                     let newRoom = p.innerHTML;
@@ -67,6 +68,7 @@
                 }
             });
 
+            //leaves room
             function leaveRoom(room) {
                 socket.emit('leave', {
                     'username': username,
@@ -74,6 +76,7 @@
                 });
             }
 
+            //joins room
             function joinRoom(room) {
                 socket.emit('join', {
                     'username': username,
@@ -86,6 +89,7 @@
                 document.querySelector('#message_text').focus()
             }
 
+            //Used to alert the user of an error in the chat message window
             function printSysMsg(msg) {
                 const p = document.createElement('p');
                 p.innerHTML = msg;
@@ -95,8 +99,9 @@
 
         });
 
-        //Displays a message
+        //Displays a message -- This SOCKET gets used from all over!
         socket.on('message_update', data => {
+
             //loads previous message data on join event
             if ('previous_messages' in data) {
                 for (message in data['previous_messages']) {
@@ -105,7 +110,8 @@
                     document.querySelector('#messages').append(li);
                 }
             }
-            //loads the message
+
+            //loads the message sent
             else {
                 const li = document.createElement('li');
                 li.innerHTML = data['message'];
@@ -113,6 +119,7 @@
             }
         });
 
+        //Adds a channel to the channel list
         socket.on('channel_update', data => {
             const li = document.createElement('li');
             li.innerHTML = data['channel'];
