@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, abort, redirect
 from flask_socketio import SocketIO, emit, join_room, leave_room
 
 allowed_users = ['foo', 'bar', 'Keegan']
-ROOMS = ['lounge', 'news', 'games', 'coding']
+ROOMS = ['Lounge', 'News', 'Games', 'Coding']
 MESSAGES = {}
 LIMIT = 100
 
@@ -124,7 +124,7 @@ def leave(data):
 
 @socketio.on('create_channel')
 def handle_create_channel(data):
-    room = data['channel']
+    room = data['channel'].title()
     if room in ROOMS:
         data = {'message': "Room already exists!"}
         emit('message_update', data, broadcast=True)
