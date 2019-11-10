@@ -4,7 +4,20 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
     document.addEventListener('DOMContentLoaded', () => {
+
+        let previousRoom;
+        if (localStorage.getItem('room')) {
+            previousRoom = localStorage.getItem('room')
+        }
         let room;
+        if (previousRoom) {
+            room = previousRoom
+        }
+        else {
+            room = "lounge"
+        }
+
+
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         const username = `{{username}}`;
         var messages = `{{messages}}`;
@@ -27,11 +40,7 @@
                 'username': username,
             })
 
-            //Initially joins user to lounge
-            if (!room) {
-                room = "lounge"
-                joinRoom(room)
-            }
+            joinRoom(room)
 
             //A message is sent
             document.querySelector('#send_button').onclick = () => {
@@ -78,6 +87,7 @@
 
             //joins room
             function joinRoom(room) {
+                localStorage.setItem('room', room)
                 socket.emit('join', {
                     'username': username,
                     'room': room
