@@ -6,16 +6,17 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         //code to handle persisting room or set an initial room to lounge
+        var rooms = decodeHtml(`{{rooms}}`);
         let previousRoom;
-        if (localStorage.getItem('room')) {
-            previousRoom = localStorage.getItem('room')
+        if (localStorage.getItem('room') && rooms.includes(localStorage.getItem('room'))) {
+            previousRoom = localStorage.getItem('room');
         }
         let room;
         if (previousRoom) {
-            room = previousRoom
+            room = previousRoom;
         }
         else {
-            room = "lounge"
+            room = "lounge";
         }
 
 
@@ -141,12 +142,17 @@
                 'room': room
             });
         }
+        function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+}
     });
 </script>
 
 
 
-<div class="container">
+<div class="container" style="height:100%vh">
     <div class="row">
         <div class="col-4" style="background-color:powderblue;">
             <br>
