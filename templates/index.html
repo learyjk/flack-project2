@@ -37,13 +37,13 @@
                 })
             }
 
-            // document.querySelector('#channel_button').onclick = () => {
-            //     channel = document.querySelector('#channel_name').value
-            //     document.querySelector('#channel_name').value = ""
-            //     socket.emit('create_channel', {
-            //         channel: channel
-            //     })
-            // }
+            document.querySelector('#channel_button').onclick = () => {
+                channel = document.querySelector('#channel_name').value
+                document.querySelector('#channel_name').value = ""
+                socket.emit('create_channel', {
+                    'channel': channel
+                })
+            }
 
             document.querySelectorAll('#select-room').forEach(p => {
                 p.onclick = () => {
