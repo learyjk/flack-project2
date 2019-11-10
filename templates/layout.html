@@ -11,20 +11,22 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
+    <!-- <link rel="stylesheet" type="text/css" href="/static/styles.css"> -->
+
 
     <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="/">Flack</a>
-
-
-
-        <a class="navbar-brand" href="/login">Login</a>
-        <a class="navbar-brand" href="/logout">Logout</a>
-
+    <nav class="navbar navbar-light bg-light justify-content-between">
+            <div class="float-left">
+                    <a class="navbar-brand" href="/">Flack:</a>
+                    <strong id="room_name"></strong>
+            </div>
+            <div class="float-right">
+                <a class="navbar-brand" href="/login">Login</a>
+                <a class="navbar-brand" href="/logout">Logout</a>
+            </div>
     </nav>
 
 

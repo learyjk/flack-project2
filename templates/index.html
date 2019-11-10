@@ -19,6 +19,9 @@
             room = "lounge";
         }
 
+        //pass room name to html
+        document.querySelector('#room_name').innerHTML = room
+
 
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         const username = `{{username}}`;
@@ -131,6 +134,8 @@
 
             //clear message area
             document.querySelector('#messages').innerHTML = ""
+            //set room name in navbar
+            document.querySelector('#room_name').innerHTML = room
             //Autofocus textbox
             document.querySelector('#message_text').focus()
         }
@@ -150,11 +155,37 @@
     });
 </script>
 
+<div class="container-fluid d-flex flex-column flex-grow-1 vh-100 overflow-hidden">
+    <div class="row flex-grow-1 overflow-hidden">
+        <div class="col-2 mh-100 overflow-auto py-2">
+            <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Room Name" type="text">
+            <button id="channel_button" class="btn btn-primary" type="submit">Create</button>
+            <h5><strong>Rooms</strong></h5>
+            <ul class="nav flex-column" id="channels" style="list-style-type:none">
+                {% for room in rooms %}
+                <li id="select-room" class="nav-item">{{ room }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col mh-100 overflow-auto py-2">
+            <!-- <h5><strong id="room_name"></strong></h5> -->
+            <ul id="messages" style="list-style-type:none">
+                {% for message in messages %}
+                    <li id="select-message">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="row flex-shrink-0 bg-light">
+        <div class="col-12 py-2">
+            <p></p>
+        </div>
+    </div>
+</div>
 
-
-<div class="container" style="height:100%vh">
+<!-- <div class="container">
     <div class="row">
-        <div class="col-4" style="background-color:powderblue;">
+        <div class="col-4" style="background-color:powderblue">
             <br>
             <div class="form-group-inline">
                 <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Channel Name" type="text">
@@ -170,7 +201,7 @@
             </ul>
 
         </div>
-        <div class="col-8" style="background-color:lightgray;">
+        <div class="col-8" style="background-color:lightgray">
             <br>
             <h5>Messages:</h5>
             <ul id="messages" style="list-style-type:none">
@@ -180,7 +211,7 @@
             </ul>
         </div>
     </div>
-</div>
+</div> -->
 
 
 {% endblock %}
