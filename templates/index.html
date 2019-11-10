@@ -5,6 +5,7 @@
 <script type="text/javascript" charset="utf-8">
     document.addEventListener('DOMContentLoaded', () => {
 
+        //code to handle persisting room or set an initial room to lounge
         let previousRoom;
         if (localStorage.getItem('room')) {
             previousRoom = localStorage.getItem('room')
