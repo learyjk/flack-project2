@@ -124,13 +124,15 @@ def leave(data):
 
 @socketio.on('create_channel')
 def handle_create_channel(data):
-    if data['channel'] in ROOMS:
+    room = data['channel']
+    if room in ROOMS:
         data = {'message': "Room already exists!"}
         emit('message_update', data, broadcast=True)
     else:
-        ROOMS.append(data['channel'])
-        # channels[data['channel']] = []
-        emit('channel_update', data, broadcast=True)
+        ROOMS.append(room)
+        MESSAGES[room] = []
+
+        emit('channel_update', {'channel': room}, broadcast=True)
 
 
 if __name__ == '__main__':

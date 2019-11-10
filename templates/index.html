@@ -56,10 +56,10 @@
 
             //Create Channel button is pressed
             document.querySelector('#channel_button').onclick = () => {
-                channel = document.querySelector('#channel_name').value
+                room = document.querySelector('#channel_name').value
                 document.querySelector('#channel_name').value = ""
                 socket.emit('create_channel', {
-                    'channel': channel
+                    'channel': room
                 })
             }
 
@@ -78,36 +78,12 @@
                 }
             });
 
-            //leaves room
-            function leaveRoom(room) {
-                socket.emit('leave', {
-                    'username': username,
-                    'room': room
-                });
-            }
-
-            //joins room
-            function joinRoom(room) {
-                localStorage.setItem('room', room)
-                socket.emit('join', {
-                    'username': username,
-                    'room': room
-                });
-
-                //clear message area
-                document.querySelector('#messages').innerHTML = ""
-                //Autofocus textbox
-                document.querySelector('#message_text').focus()
-            }
-
             //Used to alert the user of an error in the chat message window
             function printSysMsg(msg) {
                 const p = document.createElement('p');
                 p.innerHTML = msg;
                 document.querySelector('#messages').append(p);
             }
-
-
         });
 
         //Displays a message -- This SOCKET gets used from all over!
@@ -132,10 +108,34 @@
 
         //Adds a channel to the channel list
         socket.on('channel_update', data => {
+            room = data['channel']
             const li = document.createElement('li');
-            li.innerHTML = data['channel'];
+            li.innerHTML = room;
             document.querySelector('#channels').append(li);
+            joinRoom(room);
         });
+
+        //joins room
+        function joinRoom(room) {
+            localStorage.setItem('room', room)
+            socket.emit('join', {
+                'username': username,
+                'room': room
+            });
+
+            //clear message area
+            document.querySelector('#messages').innerHTML = ""
+            //Autofocus textbox
+            document.querySelector('#message_text').focus()
+        }
+
+        //leaves room
+        function leaveRoom(room) {
+            socket.emit('leave', {
+                'username': username,
+                'room': room
+            });
+        }
     });
 </script>
 
