@@ -32,6 +32,11 @@
             }
         })
 
+        //User leaves room at logout or window close.
+        window.addEventListener('beforeunload', () => {
+            leaveRoom(room)
+        })
+
         //When connected, send a message!
         socket.on('connect', () => {
 
