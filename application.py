@@ -7,6 +7,14 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 
 allowed_users = ['foo', 'bar', 'Keegan']
 ROOMS = ['lounge', 'news', 'games', 'coding']
+MESSAGES = {}
+
+for room in ROOMS:
+    MESSAGES[room] = []
+    MESSAGES[room].append("Hello, World")
+    MESSAGES[room].append("Two")
+
+print(MESSAGES)
 
 app = Flask(__name__)
 # app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -82,7 +90,7 @@ def join(data):
     room = data['room']
     join_room(room)
     data = {'message': data['username'] + " has joined " + data['room'],
-            'username': current_user.get_id(),
+            'username': "",
             'timestamp': strftime('%b-%d %I:%M%p', localtime())}
     emit('message_update', data, room=room, broadcast=True)
 
@@ -92,7 +100,7 @@ def leave(data):
     room = data['room']
     leave_room(room)
     data = {'message': data['username'] + " has left " + data['room'],
-            'username': data['username'],
+            'username': "",
             'timestamp': strftime('%b-%d %I:%M%p', localtime())}
     emit('message_update', data, room=room, broadcast=True)
 
@@ -100,11 +108,15 @@ def leave(data):
 @socketio.on('create_channel')
 def handle_create_channel(data):
     if data['channel'] in ROOMS:
-        return False
+        data = {'message': "Room already exists!",
+                'username': "",
+                'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+        print("HERE YOU ARE")
+        emit('message_update', data, broadcast=True)
     else:
         ROOMS.append(data['channel'])
-        #channels[data['channel']] = []
-    emit('channel_update', data, broadcast=True)
+        # channels[data['channel']] = []
+        emit('channel_update', data, broadcast=True)
 
 
 if __name__ == '__main__':
