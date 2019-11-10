@@ -1,10 +1,12 @@
 import os
 
+from time import localtime, strftime
 from flask_login import LoginManager, login_user, logout_user, current_user, UserMixin
 from flask import Flask, render_template, request, abort, redirect
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 allowed_users = ['foo', 'bar', 'Keegan']
+ROOMS = ['lounge', 'news', 'games', 'coding']
 
 app = Flask(__name__)
 # app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -26,7 +28,7 @@ class User(UserMixin):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", username=current_user.get_id(), rooms=ROOMS)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -45,7 +47,9 @@ def login():
 def logout():
     if current_user.is_anonymous:
         return redirect("/login")
-    data = {'message': current_user.get_id() + " has disconnected."}
+    data = {'message': "** DISCONNECTED **",
+            'username': current_user.get_id(),
+            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
     socketio.emit('message_update', data, broadcast=True)
     logout_user()
     print("logout triggered")
@@ -56,16 +60,52 @@ def logout():
 def handle_user_connects(data):
     if current_user.is_anonymous:
         return redirect("/login")
-    print(data['message'])
-    data['message'] = current_user.get_id() + " has connected."
+    data = {'message': ">> CONNECTED <<",
+            'username': current_user.get_id(),
+            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+    print("All this bullshit: ")
+    print(data)
     emit('message_update', data, broadcast=True)
 
 
 @socketio.on('message_send')
 def handle_message_send(data):
-    print('Send button was clicked!')
-    data['message'] = current_user.get_id() + ": " + data['message']
-    emit('message_update', data, broadcast=True)
+    room = data['room']
+    data = {'message': data['message'],
+            'username': current_user.get_id(),
+            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+    emit('message_update', data, room=room, broadcast=True)
+
+
+@socketio.on('join')
+def join(data):
+    room = data['room']
+    join_room(room)
+    data = {'message': data['username'] + " has joined " + data['room'],
+            'username': current_user.get_id(),
+            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+    emit('message_update', data, room=room, broadcast=True)
+
+
+@socketio.on('leave')
+def leave(data):
+    room = data['room']
+    leave_room(room)
+    data = {'message': data['username'] + " has left " + data['room'],
+            'username': data['username'],
+            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+    emit('message_update', data, room=room, broadcast=True)
+
+
+# @socketio.on('create_channel')
+# def handle_create_channel(data):
+#     print('Create Channel button pressed!')
+#     if data['channel'] in channel_list:
+#         return False
+#     else:
+#         channel_list.append(data['channel'])
+#         channels[data['channel']] = []
+#     emit('channel_update', data, broadcast=True)
 
 
 if __name__ == '__main__':

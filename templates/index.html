@@ -3,35 +3,97 @@
 {% block content %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
+
+
     document.addEventListener('DOMContentLoaded', () => {
+        let room;
         var socket = io.connect('http://' + document.domain + ':' + location.port);
+        const username = `{{username}}`;
+
+        //joinRoom(room);
 
         //When connected, send a message!
         socket.on('connect', () => {
 
             //A user connects
             socket.emit('user_connects', {
-                message: "A user has connected"
+                'message': "",
+                'username': username,
             })
+
+            //Initial join to lounge
+            room="lounge"
+            joinRoom(room)
+
 
             //A message is sent
             document.querySelector('#send_button').onclick = () => {
                 message_text = document.querySelector('#message_text').value
                 document.querySelector('#message_text').value = ""
                 socket.emit('message_send', {
-                    message: message_text
+                    'message': message_text,
+                    'username': username,
+                    'room': room
                 })
             }
+
+            // document.querySelector('#channel_button').onclick = () => {
+            //     channel = document.querySelector('#channel_name').value
+            //     document.querySelector('#channel_name').value = ""
+            //     socket.emit('create_channel', {
+            //         channel: channel
+            //     })
+            // }
+
+            document.querySelectorAll('#select-room').forEach(p => {
+                p.onclick = () => {
+                    let newRoom = p.innerHTML;
+                    if (newRoom == room) {
+                        message = `You are already in ${room}.`
+                        printSysMsg(message);
+                    } else {
+                        leaveRoom(room);
+                        joinRoom(newRoom);
+                        room = newRoom;
+                    }
+                }
+            });
+
+            function leaveRoom(room) {
+                socket.emit('leave', {'username': username, 'room': room});
+            }
+
+            function joinRoom(room) {
+                socket.emit('join', {'username': username, 'room': room});
+                //clear message area
+                document.querySelector('#messages').innerHTML = ""
+            }
+
+            function printSysMsg(msg) {
+                const p = document.createElement('p');
+                p.innerHTML = msg;
+                document.querySelector('#messages').append(p);
+            }
+
+
         });
 
         //Displays a message
         socket.on('message_update', data => {
             const li = document.createElement('li');
-            li.innerHTML = data['message'];
+            li.innerHTML = data['timestamp'] + " " + data['username'] + ": " + data['message'];
             document.querySelector('#messages').append(li);
+        });
+
+        socket.on('channel_update', data => {
+            const li = document.createElement('li');
+            li.innerHTML = data['channel'];
+            document.querySelector('#channels').append(li);
         });
     });
 </script>
+
+
 
 <div class="container">
     <div class="row">
@@ -39,18 +101,25 @@
             <br>
             <form id="create_channel" class="form-inline">
                 <div class="form-group">
-                    <input id="channel" name="channel" autocomplete="off" class="form-control" placeholder="Channel Name" type="text">
+                    <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Channel Name" type="text">
                 </div>
                 <button id="channel_button" class="btn btn-primary" type="submit">Create</button>
             </form>
+
             <br>
+
             <h5>Channels:</h5>
+            <ul id="channels" style="list-style-type:none">
+                {% for room in rooms %}
+                    <li id="select-room">{{ room }}</li>
+                {% endfor %}
+            </ul>
 
         </div>
         <div class="col-8" style="background-color:lightgray;">
             <br>
             <h5>Messages</h5>
-            <ul id="messages">
+            <ul id="messages" style="list-style-type:none">
             </ul>
         </div>
     </div>
