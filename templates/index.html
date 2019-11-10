@@ -106,7 +106,6 @@
                     document.querySelector('#messages').append(li);
                 }
             }
-
             //loads the message sent
             else {
                 const li = document.createElement('li');
@@ -151,11 +150,11 @@
             var txt = document.createElement("textarea");
             txt.innerHTML = html;
             return txt.value;
-}
+        }
     });
 </script>
 
-<div class="container-fluid d-flex flex-column flex-grow-1 vh-100 overflow-hidden">
+<div class="container-fluid d-flex flex-column flex-grow-1 vh-100 overflow-auto">
     <div class="row flex-grow-1 overflow-hidden">
         <div class="col-2 mh-100 overflow-auto py-2">
             <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Room Name" type="text">
@@ -167,7 +166,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="col mh-100 overflow-auto py-2">
+        <div id="message_box" class="col mh-100 overflow-auto py-2">
             <!-- <h5><strong id="room_name"></strong></h5> -->
             <ul id="messages" style="list-style-type:none">
                 {% for message in messages %}
@@ -182,36 +181,6 @@
         </div>
     </div>
 </div>
-
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-4" style="background-color:powderblue">
-            <br>
-            <div class="form-group-inline">
-                <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Channel Name" type="text">
-            </div>
-            <button id="channel_button" class="btn btn-primary" type="submit">Create</button>
-            <br>
-
-            <h5>Channels:</h5>
-            <ul id="channels" style="list-style-type:none">
-                {% for room in rooms %}
-                <li id="select-room">{{ room }}</li>
-                {% endfor %}
-            </ul>
-
-        </div>
-        <div class="col-8" style="background-color:lightgray">
-            <br>
-            <h5>Messages:</h5>
-            <ul id="messages" style="list-style-type:none">
-                {% for message in messages %}
-                    <li id="select-message">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</div> -->
 
 
 {% endblock %}
