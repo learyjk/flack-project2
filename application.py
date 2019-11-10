@@ -8,13 +8,10 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 allowed_users = ['foo', 'bar', 'Keegan']
 ROOMS = ['lounge', 'news', 'games', 'coding']
 MESSAGES = {}
+LIMIT = 100
 
 for room in ROOMS:
     MESSAGES[room] = []
-    MESSAGES[room].append("Hello, World")
-    MESSAGES[room].append("Two")
-
-print(MESSAGES)
 
 app = Flask(__name__)
 # app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -36,7 +33,7 @@ class User(UserMixin):
 
 @app.route("/")
 def index():
-    return render_template("index.html", username=current_user.get_id(), rooms=ROOMS)
+    return render_template("index.html", username=current_user.get_id(), rooms=ROOMS, messages=MESSAGES[room])
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -55,10 +52,12 @@ def login():
 def logout():
     if current_user.is_anonymous:
         return redirect("/login")
-    data = {'message': "** DISCONNECTED **",
-            'username': current_user.get_id(),
-            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
-    socketio.emit('message_update', data, broadcast=True)
+
+        # doesn't work because have no way to get room in this route.
+    # time_stamp = strftime('%b-%d %I:%M%p', localtime())
+    # message = time_stamp + " " + current_user.get_id() + " has left the room."
+    # MESSAGES[room].append(message)
+
     logout_user()
     print("logout triggered")
     return redirect("/login")
@@ -68,20 +67,21 @@ def logout():
 def handle_user_connects(data):
     if current_user.is_anonymous:
         return redirect("/login")
-    data = {'message': ">> CONNECTED <<",
-            'username': current_user.get_id(),
-            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
-    print("All this bullshit: ")
-    print(data)
-    emit('message_update', data, broadcast=True)
 
 
 @socketio.on('message_send')
 def handle_message_send(data):
     room = data['room']
-    data = {'message': data['message'],
-            'username': current_user.get_id(),
-            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+
+    time_stamp = strftime('%b-%d %I:%M%p', localtime())
+    message = time_stamp + " " + data['username'] + ": " + data['message']
+    MESSAGES[room].append(message)
+
+    # don't store more than 100 previous messages
+    if len(MESSAGES[room]) > LIMIT:
+        MESSAGES[room].pop(0)
+
+    data = {'message': message}
     emit('message_update', data, room=room, broadcast=True)
 
 
@@ -89,9 +89,13 @@ def handle_message_send(data):
 def join(data):
     room = data['room']
     join_room(room)
-    data = {'message': data['username'] + " has joined " + data['room'],
-            'username': "",
-            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+
+    time_stamp = strftime('%b-%d %I:%M%p', localtime())
+    message = time_stamp + " " + data['username'] + " has joined " + room
+    MESSAGES[room].append(message)
+
+    data = {'previous_messages': MESSAGES[room]}
+
     emit('message_update', data, room=room, broadcast=True)
 
 
@@ -99,19 +103,19 @@ def join(data):
 def leave(data):
     room = data['room']
     leave_room(room)
-    data = {'message': data['username'] + " has left " + data['room'],
-            'username': "",
-            'timestamp': strftime('%b-%d %I:%M%p', localtime())}
+
+    time_stamp = strftime('%b-%d %I:%M%p', localtime())
+    message = time_stamp + " " + data['username'] + " has left " + room
+    MESSAGES[room].append(message)
+
+    data = {'message': message}
     emit('message_update', data, room=room, broadcast=True)
 
 
 @socketio.on('create_channel')
 def handle_create_channel(data):
     if data['channel'] in ROOMS:
-        data = {'message': "Room already exists!",
-                'username': "",
-                'timestamp': strftime('%b-%d %I:%M%p', localtime())}
-        print("HERE YOU ARE")
+        data = {'message': "Room already exists!"}
         emit('message_update', data, broadcast=True)
     else:
         ROOMS.append(data['channel'])

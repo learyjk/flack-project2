@@ -7,6 +7,7 @@
         let room;
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         const username = `{{username}}`;
+        var messages = `{{messages}}`;
 
         //Enter key causes send button click
         let msg = document.querySelector('#message_text');
@@ -27,8 +28,11 @@
             })
 
             //Initial join to lounge
-            room = "lounge"
-            joinRoom(room)
+            if (!room) {
+                room = "lounge"
+                joinRoom(room)
+            }
+
 
             //A message is sent
             document.querySelector('#send_button').onclick = () => {
@@ -75,6 +79,7 @@
                     'username': username,
                     'room': room
                 });
+
                 //clear message area
                 document.querySelector('#messages').innerHTML = ""
                 //Autofocus textbox
@@ -92,9 +97,20 @@
 
         //Displays a message
         socket.on('message_update', data => {
-            const li = document.createElement('li');
-            li.innerHTML = data['timestamp'] + " " + data['username'] + ": " + data['message'];
-            document.querySelector('#messages').append(li);
+            //loads previous message data on join event
+            if ('previous_messages' in data) {
+                for (message in data['previous_messages']) {
+                    const li = document.createElement('li');
+                    li.innerHTML = data['previous_messages'][message];
+                    document.querySelector('#messages').append(li);
+                }
+            }
+            //loads the message
+            else {
+                const li = document.createElement('li');
+                li.innerHTML = data['message'];
+                document.querySelector('#messages').append(li);
+            }
         });
 
         socket.on('channel_update', data => {
@@ -129,6 +145,9 @@
             <br>
             <h5>Messages:</h5>
             <ul id="messages" style="list-style-type:none">
+                {% for message in messages %}
+                    <li id="select-message">{{ message }}</li>
+                {% endfor %}
             </ul>
         </div>
     </div>
