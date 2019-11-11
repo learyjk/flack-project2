@@ -19,5 +19,3 @@ Helpful Tutorials:
 Issues to fix:
 
 1. Auto scroll to bottom of #message_box div.
-
-git test
