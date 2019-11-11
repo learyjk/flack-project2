@@ -5,6 +5,9 @@ Web Programming with Python and JavaScript
 Project Spec:
 https://docs.cs50.net/ocw/web/projects/2/project2.html
 
+YouTube project demo:
+https://youtu.be/OqApYS_mo7o
+
 Flack is a chat app for cs50 Web Dev class with objectives to improve my abilities with JavaScript, web UI, and Socket.IO.  This repository hosts my code to accomplish this app.
 
 Some issues that I experienced while working on this program:

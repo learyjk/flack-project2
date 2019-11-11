@@ -1,4 +1,4 @@
-import os
+# import os
 
 from time import localtime, strftime
 from flask_login import LoginManager, login_user, logout_user, current_user, UserMixin
@@ -16,7 +16,7 @@ for room in ROOMS:
 
 app = Flask(__name__)
 # app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config["SECRET_KEY"] = 'abcdefghijkl'
+app.config["SECRET_KEY"] = 'ascwefiohweoiwjfoiwejg'
 
 login_manager = LoginManager(app)
 socketio = SocketIO(app)
