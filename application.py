@@ -5,9 +5,10 @@ from flask_login import LoginManager, login_user, logout_user, current_user, Use
 from flask import Flask, render_template, request, abort, redirect
 from flask_socketio import SocketIO, emit, join_room, leave_room
 
-allowed_users = ['foo', 'bar', 'Keegan']
+users = ['foo', 'bar', 'Keegan']
 ROOMS = ['Lounge', 'News', 'Games', 'Coding']
 MESSAGES = {}
+DMS = {}
 LIMIT = 100
 
 for room in ROOMS:
@@ -35,14 +36,14 @@ class User(UserMixin):
 def index():
     if current_user.is_anonymous:
         return redirect("/login")
-    return render_template("index.html", username=current_user.get_id(), rooms=ROOMS, messages=MESSAGES[room])
+    return render_template("index.html", username=current_user.get_id(), users=users, rooms=ROOMS, messages=MESSAGES[room])
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
-        if username not in allowed_users:
+        if username not in users:
             abort(401)
         login_user(User(username))
         return redirect("/")

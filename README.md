@@ -11,9 +11,9 @@ Still not complete:
 
 
 Helpful Tutorials:
-flack-socketio documentation: https://flask-socketio.readthedocs.io/en/latest/
-Sandeep Sudhakaran: https://www.youtube.com/watch?v=zQDzNNt6xd4
-nobaa36: https://github.com/nobaa36/CS50-s-Web---project-2-Flack
+1. flack-socketio documentation: https://flask-socketio.readthedocs.io/en/latest/
+2. Sandeep Sudhakaran: https://www.youtube.com/watch?v=zQDzNNt6xd4
+3. nobaa36: https://github.com/nobaa36/CS50-s-Web---project-2-Flack
 
 
 Issues to fix:

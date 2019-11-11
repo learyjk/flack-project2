@@ -166,12 +166,23 @@
     <div class="col-2 mh-100 overflow-auto py-2">
         <input id="channel_name" name="channel_name" autocomplete="off" class="form-control" placeholder="Room Name" type="text">
         <button id="channel_button" class="btn btn-primary" type="submit">Create</button>
-        <h5><strong>Rooms</strong></h5>
-        <ul class="nav flex-column" id="channels" style="list-style-type:none">
-            {% for room in rooms %}
-            <li id="select-room" class="nav-item">{{ room }}</li>
-            {% endfor %}
-        </ul>
+
+        <div class="nav flex-column">
+            <h5><strong>Rooms:</strong></h5>
+
+            <ul id="channels" style="list-style-type:none">
+                {% for room in rooms %}
+                <li id="select-room" class="nav-item">{{ room }}</li>
+                {% endfor %}
+            </ul>
+
+            <h5><strong>Users:</strong></h5>
+            <ul id="users" style="list-style-type:none">
+                {% for user in users %}
+                <li id="select-user" class="nav-item">{{ user }}</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
     <div id="message_box" class="col mh-100 overflow-auto py-2">
