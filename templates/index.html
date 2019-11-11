@@ -23,6 +23,8 @@
 
 
         var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var private_socket = io.connect('http://' + document.domain + ':' + location.port + "/private");
+
         const username = `{{username}}`;
         var messages = `{{messages}}`;
 
@@ -45,8 +47,8 @@
 
             //A user connects
             socket.emit('user_connects', {
-                'message': "",
                 'username': username,
+                'room': room
             })
 
             joinRoom(room)
@@ -84,7 +86,32 @@
                         room = newRoom;
                     }
                 }
-            });
+            })
+
+            document.querySelectorAll('#select-user').forEach(p => {
+                p.onclick = () => {
+                    // let newRoom = 'Private';
+                    //
+                    // if (newRoom == room) {
+                    //     message = `You are already in ${room}.`
+                    //     printSysMsg(message);
+                    // } else {
+                    //     leaveRoom(room);
+                    //     joinRoom(newRoom);
+                    //     room = newRoom;
+                    // }
+
+                    var recipient = p.innerHTML;
+                    var message_text = document.querySelector('#message_text').value
+                    document.querySelector('#message_text').value = ""
+
+                    data = {'username': recipient,
+                            'message': message_text};
+
+                    private_socket.emit('private_message', data);
+
+                }
+            })
 
             //Used to alert the user of an error in the chat message window
             function printSysMsg(msg) {
@@ -124,6 +151,11 @@
             joinRoom(room);
         });
 
+        private_socket.on('new_private_message', message => {
+            alert(message);
+        });
+
+
         //joins room
         function joinRoom(room) {
             localStorage.setItem('room', room)
@@ -157,7 +189,6 @@
         function updateScroll() {
             const chatwindow = document.querySelector('#message_box');
             chatWindow.scrollTop = chatWindow.scrollHeight;
-            alert("message sent!")
         }
     });
 </script>
