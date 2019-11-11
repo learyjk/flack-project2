@@ -62,11 +62,6 @@ def logout():
     if current_user.is_anonymous:
         return redirect("/login")
 
-        # doesn't work because have no way to get room in this route.
-    # time_stamp = strftime('%b-%d %I:%M%p', localtime())
-    # message = time_stamp + " " + current_user.get_id() + " has left the room."
-    # MESSAGES[room].append(message)
-
     logout_user()
     print("logout triggered")
     return redirect("/login")
@@ -127,7 +122,7 @@ def leave(data):
     message = time_stamp + " " + data['username'] + " has left " + room
 
     MESSAGES[room].append(message)
-    # don't store more than 100 previous messages
+    # don't store more than LIMIT previous messages
     if len(MESSAGES[room]) > LIMIT:
         MESSAGES[room].pop(0)
 

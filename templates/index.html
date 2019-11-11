@@ -90,16 +90,6 @@
 
             document.querySelectorAll('#select-user').forEach(p => {
                 p.onclick = () => {
-                    // let newRoom = 'Private';
-                    //
-                    // if (newRoom == room) {
-                    //     message = `You are already in ${room}.`
-                    //     printSysMsg(message);
-                    // } else {
-                    //     leaveRoom(room);
-                    //     joinRoom(newRoom);
-                    //     room = newRoom;
-                    // }
 
                     var recipient = p.innerHTML;
                     var message_text = document.querySelector('#message_text').value
@@ -139,6 +129,7 @@
                 document.querySelector('#messages').append(li);
             }
 
+            //doesn't work but leaving this here in case I get ambitious.
             //updateScroll();
         });
 
@@ -186,10 +177,11 @@
             return txt.value;
         }
 
-        function updateScroll() {
-            const chatwindow = document.querySelector('#message_box');
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
+        // doesn't work but leaving in case I get excited.
+        // function updateScroll() {
+        //     const chatwindow = document.querySelector('#message_box');
+        //     chatWindow.scrollTop = chatWindow.scrollHeight;
+        // }
     });
 </script>
 
